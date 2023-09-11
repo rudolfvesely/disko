@@ -77,7 +77,7 @@ in
     extraOpenArgs = lib.mkOption {
       type = lib.types.listOf lib.types.str;
       default = [ ];
-      description = "Extra arguments to pass to `cryptsetup luksOpen` when opening";
+      description = "Extra arguments to pass to `cryptsetup open` when opening";
       example = [ "--allow-discards" ];
     };
     content = diskoLib.deviceType { parent = config; device = "/dev/mapper/${config.name}"; };
@@ -99,7 +99,7 @@ in
         while ! cryptsetup -q luksFormat ${config.device} ${toString config.extraFormatArgs} \
           ${keyFileArgs}
         do echo AGAIN; sleep 2; done
-        cryptsetup luksOpen ${config.device} ${config.name} \
+        cryptsetup open ${config.device} ${config.name} \
           ${toString config.extraOpenArgs} \
           ${keyFileArgs}
         ${toString (lib.lists.forEach config.additionalKeyFiles (x: "cryptsetup luksAddKey ${config.device} ${x} ${keyFileArgs}"))}
@@ -115,7 +115,7 @@ in
         {
           dev = ''
             cryptsetup status ${config.name} >/dev/null 2>/dev/null ||
-              cryptsetup luksOpen ${config.device} ${config.name} \
+              cryptsetup open ${config.device} ${config.name} \
               ${keyFileArgs}
             ${lib.optionalString (config.content != null) contentMount.dev or ""}
           '';
