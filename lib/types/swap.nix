@@ -35,7 +35,7 @@
     _create = diskoLib.mkCreateOption {
       inherit config options;
       default = ''
-        mkswap ${config.device}
+        while ! mkswap ${config.device}; do echo AGAIN; sleep 2; done
       '';
     };
     _mount = diskoLib.mkMountOption {
