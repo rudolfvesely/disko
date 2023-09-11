@@ -96,8 +96,8 @@ in
     _create = diskoLib.mkCreateOption {
       inherit config options;
       default = ''
-        cryptsetup -q luksFormat ${config.device} ${toString config.extraFormatArgs} \
-          ${keyFileArgs}
+        while ! cryptsetup -q luksFormat ${config.device} ${toString config.extraFormatArgs} \
+          ${keyFileArgs}; do echo AGAIN; sleep 2; done
         cryptsetup luksOpen ${config.device} ${config.name} \
           ${toString config.extraOpenArgs} \
           ${keyFileArgs}
