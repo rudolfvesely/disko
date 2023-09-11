@@ -97,7 +97,8 @@ in
       inherit config options;
       default = ''
         while ! cryptsetup -q luksFormat ${config.device} ${toString config.extraFormatArgs} \
-          ${keyFileArgs}; do echo AGAIN; sleep 2; done
+          ${keyFileArgs}
+        do echo AGAIN; sleep 2; done
         cryptsetup luksOpen ${config.device} ${config.name} \
           ${toString config.extraOpenArgs} \
           ${keyFileArgs}
