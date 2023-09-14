@@ -11,6 +11,11 @@
       default = device;
       description = "Device";
     };
+    extraArgs = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [ ];
+      description = "Extra arguments";
+    };
     randomEncryption = lib.mkOption {
       type = lib.types.bool;
       default = false;
@@ -35,7 +40,9 @@
     _create = diskoLib.mkCreateOption {
       inherit config options;
       default = ''
-        while ! mkswap ${config.device}; do echo AGAIN; sleep 2; done
+        mkswap \
+          ${toString config.extraArgs} \
+          ${config.device}
       '';
     };
     _mount = diskoLib.mkMountOption {
