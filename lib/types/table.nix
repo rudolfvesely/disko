@@ -93,7 +93,7 @@
           # ensure /dev/disk/by-path/..-partN exists before continuing
           udevadm trigger --subsystem-match=block
           udevadm settle
-          partprobe
+          partprobe || true
           ${lib.optionalString partition.bootable ''
             parted -s ${config.device} -- set ${toString partition._index} boot on
           ''}
@@ -103,7 +103,7 @@
           # ensure further operations can detect new partitions
           udevadm trigger --subsystem-match=block
           udevadm settle
-          partprobe
+          partprobe || true
           ${lib.optionalString (partition.content != null) partition.content._create}
         '') config.partitions)}
       '';
